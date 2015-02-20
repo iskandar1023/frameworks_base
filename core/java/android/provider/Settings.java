@@ -3407,6 +3407,7 @@ public final class Settings {
          */
 
         /**
+
          * Volume keys control cursor in text fields (default is 0)
          * 0 - Disabled
          * 1 - Volume up/down moves cursor left/right
@@ -3536,6 +3537,12 @@ public final class Settings {
         * USB Data automatic unlock
         */
        public static final String USB_DATA_AUTO_UNLOCK = "usb_data_auto_unlock";
+
+         /**
+         *  Enable navigation bar double tap gesture on to put device to sleep
+         * @hide
+         */
+        public static final String DOUBLE_TAP_SLEEP_NAVBAR = "double_tap_sleep_navbar";
 
         /**
          * Settings to backup. This is here so that it's in the same place as the settings
