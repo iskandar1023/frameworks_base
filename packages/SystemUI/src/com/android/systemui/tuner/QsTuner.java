@@ -203,6 +203,7 @@ public class QsTuner extends Fragment implements Callback {
         else if (spec.equals("sync")) return R.string.quick_settings_sync_label;
         else if (spec.equals("screenshot")) return R.string.quick_settings_screenshot_label;
         else if (spec.equals("caffeine")) return R.string.quick_settings_caffeine_label;
+        else if (spec.equals("heads_up")) return R.string.quick_settings_heads_up_label;
         return 0;
     }
 
@@ -453,6 +454,7 @@ public class QsTuner extends Fragment implements Callback {
             else if (mSpec.equals("sync")) return R.drawable.ic_qs_sync_on;
             else if (mSpec.equals("screenshot")) return R.drawable.ic_qs_screenshot;
             else if (mSpec.equals("caffeine")) return R.drawable.ic_qs_caffeine_on;
+            else if (mSpec.equals("heads_up")) return R.drawable.ic_qs_heads_up_on;
             return R.drawable.android;
         }
 
