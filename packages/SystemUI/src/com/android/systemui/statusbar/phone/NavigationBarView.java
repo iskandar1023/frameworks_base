@@ -307,6 +307,38 @@ public class NavigationBarView extends LinearLayout {
 
 
         setDisabledFlags(mDisabledFlags, true);
+
+        if (mShowDpadArrowKeys) { // overrides IME button
+            final boolean showingIme = ((mNavigationIconHints
+                    & StatusBarManager.NAVIGATION_HINT_BACK_ALT) != 0);
+
+            setVisibleOrGone(getCurrentView().findViewById(R.id.dpad_left), showingIme);
+            setVisibleOrGone(getCurrentView().findViewById(R.id.dpad_right), showingIme);
+
+            View one = getCurrentView().findViewById(mVertical ? R.id.six : R.id.one);
+            View six = getCurrentView().findViewById(mVertical ? R.id.one : R.id.six);
+            if (showingIme) {
+                if (mSlotOneVisibility == View.VISIBLE) {
+                    mSlotOneVisibility = one.getVisibility();
+                    setVisibleOrGone(one, false);
+                }
+                if (mSlotSixVisibility == View.VISIBLE) {
+                    mSlotSixVisibility = six.getVisibility();
+                    setVisibleOrGone(six, false);
+                }
+            } else {
+                if (mSlotOneVisibility != -1) {
+                    one.setVisibility(mSlotOneVisibility);
+                    mSlotOneVisibility = -1;
+                }
+                if (mSlotSixVisibility != -1) {
+                    six.setVisibility(mSlotSixVisibility);
+                    mSlotSixVisibility = -1;
+                }
+            }
+        }
+        // Update menu button in case the IME state has changed.
+        setMenuVisibility(mShowMenu, true);
     }
 
     public void setDisabledFlags(int disabledFlags) {
