@@ -82,6 +82,17 @@ public class NavigationBarView extends LinearLayout {
     private DeadZone mDeadZone;
     private final NavigationBarTransitions mBarTransitions;
 
+    /**
+     * Tracks the current visibilities of the far left (R.id.one) and right (R.id.six) buttons
+     * while dpad arrow keys are visible.
+     *
+     * We keep track of the orientations separately because they can get in different states,
+     * We can be showing dpad arrow keys on vertical, but on portrait that may not be so.
+     */
+    public int[][] mSideButtonVisibilities = new int[][] {
+        {-1, -1} /* portrait */, {-1, -1} /* vertical */
+    };
+
     // workaround for LayoutTransitions leaving the nav buttons in a weird state (bug 5549288)
     final static boolean WORKAROUND_INVALID_LAYOUT = true;
     final static int MSG_CHECK_INVALID_LAYOUT = 8686;
@@ -308,6 +319,9 @@ public class NavigationBarView extends LinearLayout {
 
         setDisabledFlags(mDisabledFlags, true);
 
+        // Update menu button in case the IME state has changed.
+        setMenuVisibility(mShowMenu, true);
+
         if (mShowDpadArrowKeys) { // overrides IME button
             final boolean showingIme = ((mNavigationIconHints
                     & StatusBarManager.NAVIGATION_HINT_BACK_ALT) != 0);
@@ -318,27 +332,34 @@ public class NavigationBarView extends LinearLayout {
             View one = getCurrentView().findViewById(mVertical ? R.id.six : R.id.one);
             View six = getCurrentView().findViewById(mVertical ? R.id.one : R.id.six);
             if (showingIme) {
-                if (mSlotOneVisibility == View.VISIBLE) {
-                    mSlotOneVisibility = one.getVisibility();
+                if (one.getVisibility() != View.GONE) {
+                    setSideButtonVisibility(true, one.getVisibility());
                     setVisibleOrGone(one, false);
                 }
-                if (mSlotSixVisibility == View.VISIBLE) {
-                    mSlotSixVisibility = six.getVisibility();
+
+                if (six.getVisibility() != View.GONE) {
+                    setSideButtonVisibility(false, six.getVisibility());
                     setVisibleOrGone(six, false);
                 }
             } else {
-                if (mSlotOneVisibility != -1) {
-                    one.setVisibility(mSlotOneVisibility);
-                    mSlotOneVisibility = -1;
+                if (getSideButtonVisibility(true) != -1) {
+                    one.setVisibility(getSideButtonVisibility(true));
+                    setSideButtonVisibility(true, - 1);
                 }
-                if (mSlotSixVisibility != -1) {
-                    six.setVisibility(mSlotSixVisibility);
-                    mSlotSixVisibility = -1;
+                if (getSideButtonVisibility(false) != -1) {
+                    six.setVisibility(getSideButtonVisibility(false));
+                    setSideButtonVisibility(false, -1);
                 }
             }
         }
-        // Update menu button in case the IME state has changed.
-        setMenuVisibility(mShowMenu, true);
+    }
+
+    private int getSideButtonVisibility(boolean left) {
+        return mSideButtonVisibilities[mVertical ? 1 : 0][left ? 0 : 1];
+    }
+
+    private void setSideButtonVisibility(boolean left, int vis) {
+        mSideButtonVisibilities[mVertical ? 1 : 0][left ? 0 : 1] = vis;
     }
 
     public void setDisabledFlags(int disabledFlags) {
@@ -712,5 +733,136 @@ public class NavigationBarView extends LinearLayout {
 
     public interface OnVerticalChangedListener {
         void onVerticalChanged(boolean isVertical);
+    }
+
+    void setListeners(OnClickListener recentsClickListener, OnTouchListener recentsPreloadListener,
+                      OnLongClickListener recentsBackListener, OnTouchListener homeSearchActionListener) {
+        mRecentsClickListener = recentsClickListener;
+        mRecentsPreloadListener = recentsPreloadListener;
+        mHomeSearchActionListener = homeSearchActionListener;
+        mRecentsBackListener = recentsBackListener;
+        updateButtonListeners();
+    }
+
+    private void removeButtonListeners() {
+        ViewGroup container = (ViewGroup) mCurrentView.findViewById(R.id.container);
+        int viewCount = container.getChildCount();
+        for (int i = 0; i < viewCount; i++) {
+            View button = container.getChildAt(i);
+            if (button instanceof KeyButtonView) {
+                button.setOnClickListener(null);
+                button.setOnTouchListener(null);
+            }
+        }
+    }
+
+    protected void updateButtonListeners() {
+        View recentView = mCurrentView.findViewWithTag(NavbarEditor.NAVBAR_RECENT);
+        if (recentView != null) {
+            recentView.setOnClickListener(mRecentsClickListener);
+            recentView.setOnTouchListener(mRecentsPreloadListener);
+            recentView.setLongClickable(true);
+            recentView.setOnLongClickListener(mRecentsBackListener);
+        }
+        View backView = mCurrentView.findViewWithTag(NavbarEditor.NAVBAR_BACK);
+        if (backView != null) {
+            backView.setLongClickable(true);
+            backView.setOnLongClickListener(mRecentsBackListener);
+        }
+        View homeView = mCurrentView.findViewWithTag(NavbarEditor.NAVBAR_HOME);
+        if (homeView != null) {
+            homeView.setOnTouchListener(mHomeSearchActionListener);
+        }
+    }
+
+    public boolean isInEditMode() {
+        return mInEditMode;
+    }
+
+    private void setButtonWithTagVisibility(Object tag, boolean visible) {
+        View findView = mCurrentView.findViewWithTag(tag);
+        if (findView == null) {
+            return;
+        }
+        int visibility = visible ? View.VISIBLE : View.INVISIBLE;
+        // if we're showing dpad arrow keys (e.g. the side button visibility where it's shown != -1)
+        // then don't actually update that buttons visibility, but update the stored value
+        if (getSideButtonVisibility(true) != -1
+                && findView.getId() == (mVertical ? R.id.six : R.id.one)) {
+            setSideButtonVisibility(true, visibility);
+        } else if (getSideButtonVisibility(false) != -1
+                && findView.getId() == (mVertical ? R.id.one : R.id.six)) {
+            setSideButtonVisibility(false, visibility);
+        } else {
+            findView.setVisibility(visibility);
+        }
+    }
+
+    // TODO LINK TO THIS ONCE THEMES GOES IN
+    protected void updateResources() {
+        getIcons(mContext.getResources());
+    }
+
+    public class NavBarReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            boolean edit = intent.getBooleanExtra("edit", false);
+            boolean save = intent.getBooleanExtra("save", false);
+            if (edit != mInEditMode) {
+                mInEditMode = edit;
+                if (edit) {
+                    removeButtonListeners();
+                    mEditBar.setEditMode(true);
+                } else {
+                    if (save) {
+                        mEditBar.saveKeys();
+                    }
+                    mEditBar.setEditMode(false);
+                    updateSettings();
+                }
+            }
+        }
+    }
+
+    public void updateSettings() {
+        mEditBar.updateKeys();
+        removeButtonListeners();
+        updateButtonListeners();
+        setDisabledFlags(mDisabledFlags, true /* force */);
+        setMenuVisibility(mShowMenu, true);
+    }
+
+    private class SettingsObserver extends ContentObserver {
+
+        SettingsObserver(Handler handler) {
+            super(handler);
+        }
+
+        void observe() {
+            ContentResolver resolver = getContext().getContentResolver();
+            resolver.registerContentObserver(
+                    Settings.System.getUriFor(Settings.System.NAVIGATION_BAR_MENU_ARROW_KEYS),
+                    false, this);
+
+            // intialize mModlockDisabled
+            onChange(false);
+        }
+
+        void unobserve() {
+            getContext().getContentResolver().unregisterContentObserver(this);
+        }
+
+        @Override
+        public void onChange(boolean selfChange) {
+            mShowDpadArrowKeys = Settings.System.getInt(mContext.getContentResolver(),
+                    Settings.System.NAVIGATION_BAR_MENU_ARROW_KEYS, 0) != 0;
+            // reset saved side button visibilities
+            for (int i = 0; i < mSideButtonVisibilities.length; i++) {
+                for (int j = 0; j < mSideButtonVisibilities[i].length; j++) {
+                    mSideButtonVisibilities[i][j] = -1;
+                }
+            }
+            setNavigationIconHints(mNavigationIconHints, true);
+        }
     }
 }
