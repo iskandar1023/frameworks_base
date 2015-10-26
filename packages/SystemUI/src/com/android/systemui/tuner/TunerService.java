@@ -38,15 +38,15 @@ import java.util.List;
 
 public class TunerService extends SystemUI {
 
-    private final Observer mObserver = new Observer();
+    public final Observer mObserver = new Observer();
     // Map of Uris we listen on to their settings keys.
-    private final ArrayMap<Uri, String> mListeningUris = new ArrayMap<>();
+    public final ArrayMap<Uri, String> mListeningUris = new ArrayMap<>();
     // Map of settings keys to the listener.
-    private final HashMap<String, List<Tunable>> mTunableLookup = new HashMap<>();
+    public final HashMap<String, List<Tunable>> mTunableLookup = new HashMap<>();
 
-    private ContentResolver mContentResolver;
-    private int mCurrentUser;
-    private CurrentUserTracker mUserTracker;
+    public ContentResolver mContentResolver;
+    public int mCurrentUser;
+    public CurrentUserTracker mUserTracker;
 
     @Override
     public void start() {
@@ -71,7 +71,7 @@ public class TunerService extends SystemUI {
         }
     }
 
-    private void addTunable(Tunable tunable, String key) {
+    public void addTunable(Tunable tunable, String key) {
         if (!mTunableLookup.containsKey(key)) {
             mTunableLookup.put(key, new ArrayList<Tunable>());
         }
@@ -79,7 +79,7 @@ public class TunerService extends SystemUI {
         Uri uri = Settings.Secure.getUriFor(key);
         if (!mListeningUris.containsKey(uri)) {
             mListeningUris.put(uri, key);
-            mContentResolver.registerContentObserver(uri, false, mObserver, mCurrentUser);
+            mContentResolver.registerContentObserver(uri, true, mObserver, mCurrentUser);
         }
         // Send the first state.
         String value = Settings.Secure.getStringForUser(mContentResolver, key, mCurrentUser);
@@ -98,7 +98,7 @@ public class TunerService extends SystemUI {
         }
         mContentResolver.unregisterContentObserver(mObserver);
         for (Uri uri : mListeningUris.keySet()) {
-            mContentResolver.registerContentObserver(uri, false, mObserver, mCurrentUser);
+            mContentResolver.registerContentObserver(uri, true, mObserver, mCurrentUser);
         }
     }
 
@@ -110,7 +110,7 @@ public class TunerService extends SystemUI {
         }
     }
 
-    private void reloadAll() {
+    public void reloadAll() {
         for (String key : mTunableLookup.keySet()) {
             String value = Settings.Secure.getStringForUser(mContentResolver, key,
                     mCurrentUser);
@@ -121,7 +121,7 @@ public class TunerService extends SystemUI {
     }
 
     // Only used in other processes, such as the tuner.
-    private static TunerService sInstance;
+    public static TunerService sInstance;
 
     public static TunerService get(Context context) {
         SystemUIApplication sysUi = (SystemUIApplication) context.getApplicationContext();
@@ -133,7 +133,7 @@ public class TunerService extends SystemUI {
         return service;
     }
 
-    private static TunerService getStaticService(Context context) {
+    public static TunerService getStaticService(Context context) {
         if (sInstance == null) {
             sInstance = new TunerService();
             sInstance.mContext = context.getApplicationContext();
@@ -143,7 +143,7 @@ public class TunerService extends SystemUI {
         return sInstance;
     }
 
-    private static Context userContext(Context context) {
+    public static Context userContext(Context context) {
         try {
             return context.createPackageContextAsUser(context.getPackageName(), 0,
                     new UserHandle(ActivityManager.getCurrentUser()));
@@ -152,7 +152,7 @@ public class TunerService extends SystemUI {
         }
     }
 
-    private class Observer extends ContentObserver {
+    public class Observer extends ContentObserver {
         public Observer() {
             super(new Handler(Looper.getMainLooper()));
         }
