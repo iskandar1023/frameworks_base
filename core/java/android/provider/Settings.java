@@ -3456,6 +3456,12 @@ public final class Settings {
          */
         public static final String STATUSBAR_CLOCK_DATE_FORMAT = "statusbar_clock_date_format";
 
+         /**
+         * Show search bar in recents
+         * @hide
+         */
+        public static final String RECENTS_SHOW_SEARCH_BAR = "recents_show_search_bar";
+
         /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
@@ -3510,7 +3516,8 @@ public final class Settings {
             NOTIFICATION_SOUND,
             STATUS_BAR_BATTERY_STYLE,
             STATUS_BAR_SHOW_BATTERY_PERCENT,
-	    STATUS_BAR_SHOW_BATTERY_PERCENT_LOW_ONLY
+	    STATUS_BAR_SHOW_BATTERY_PERCENT_LOW_ONLY,
+            RECENTS_SHOW_SEARCH_BAR
         };
 
         /**
