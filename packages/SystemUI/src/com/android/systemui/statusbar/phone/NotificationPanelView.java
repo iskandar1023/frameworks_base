@@ -274,7 +274,6 @@ public class NotificationPanelView extends PanelView implements
         mQsPanel = (QSPanel) findViewById(R.id.quick_settings_panel);
         mClockView = (TextView) findViewById(R.id.clock_view);
         mScrollView = (ObservableScrollView) findViewById(R.id.scroll_view);
-        mScrollView.setListener(this);
         mScrollView.setFocusable(false);
         mReserveNotificationSpace = findViewById(R.id.reserve_notification_space);
         mNotificationContainerParent = (NotificationsQuickSettingsContainer)
@@ -308,6 +307,19 @@ public class NotificationPanelView extends PanelView implements
                 }
             }
         });
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        mSettingsObserver.observe();
+        mScrollView.setListener(this);
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        mSettingsObserver.unobserve();
     }
 
     @Override
@@ -396,16 +408,6 @@ public class NotificationPanelView extends PanelView implements
             mQsContainer.setHeightOverride(mQsContainer.getDesiredHeight());
         }
         updateMaxHeadsUpTranslation();
-    }
-
-    @Override
-    public void onAttachedToWindow() {
-        mSettingsObserver.observe();
-    }
-
-    @Override
-    public void onDetachedFromWindow() {
-        mSettingsObserver.unobserve();
     }
 
     private void startQsSizeChangeAnimation(int oldHeight, final int newHeight) {

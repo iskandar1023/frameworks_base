@@ -683,4 +683,12 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
         updateLeftAffordanceIcon();
         updateLeftPreview();
     }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        mAccessibilityController.removeStateChangedCallback(this);
+        mContext.unregisterReceiver(mDevicePolicyReceiver);
+        mUnlockMethodCache.removeListener(this);
+    }
 }
