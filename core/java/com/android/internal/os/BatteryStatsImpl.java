@@ -2117,6 +2117,9 @@ public final class BatteryStatsImpl extends BatteryStats {
         if ((firstToken&DELTA_BATTERY_LEVEL_FLAG) != 0) {
             batteryLevelInt = src.readInt();
             readBatteryLevelInt(batteryLevelInt, cur);
+            cur.batteryLevel = (byte)((batteryLevelInt>>25)&0x7f);
+            cur.batteryTemperature = (short)((batteryLevelInt<<7)>>22);
+            cur.batteryVoltage = (char)((batteryLevelInt>>1)&0x3fff);
             cur.numReadInts += 1;
             if (DEBUG) Slog.i(TAG, "READ DELTA: batteryToken=0x"
                     + Integer.toHexString(batteryLevelInt)
