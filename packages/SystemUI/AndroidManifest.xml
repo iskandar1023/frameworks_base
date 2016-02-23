@@ -212,6 +212,15 @@
                   android:exported="true">
         </activity>
 
+        <activity android:name=".tuner.DemoModeActivity"
+                  android:enabled="true"
+                  android:theme="@android:style/Theme.Material.Settings"
+                  android:label="@string/systemui_demo_mode_title"
+                  android:process=":tuner"
+                  android:parentActivityName="com.android.settings.krexus.SystemUISettings"
+                  android:exported="true">
+        </activity>
+
         <!-- Alternate Recents -->
         <activity android:name=".recents.RecentsActivity"
                   android:label="@string/accessibility_desc_recent_apps"
