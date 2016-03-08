@@ -771,15 +771,12 @@ public final class BatteryService extends SystemService {
                     // Battery charging led or low battery pulse are disabled, no lights
                     mBatteryLight.turnOff();
                 }
-            } else if ((status == BatteryManager.BATTERY_STATUS_CHARGING
-                    || status == BatteryManager.BATTERY_STATUS_FULL) && mBatteryLedEnabled) {
-                if (status == BatteryManager.BATTERY_STATUS_FULL || level >= 90) {
-                    // Solid green when full or charging and nearly full
-                    mBatteryLight.setColor(mBatteryFullARGB);
-                } else {
-                    // Solid orange when charging and halfway full
-                    mBatteryLight.setColor(mBatteryMediumARGB);
-                }
+            } else if ((status == BatteryManager.BATTERY_STATUS_CHARGING) && mBatteryLedEnabled) {
+                // Battery is charging
+                mBatteryLight.setColor(mBatteryMediumARGB);
+            } else if ((status == BatteryManager.BATTERY_STATUS_FULL) && mBatteryLedEnabled) {
+                // Battery is full
+                mBatteryLight.setColor(mBatteryFullARGB);
             } else {
                 // No lights if not charging and not low or the relevant setting is not enabled
                 mBatteryLight.turnOff();
