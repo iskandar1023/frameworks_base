@@ -279,7 +279,7 @@ LOCAL_CFLAGS += -Wno-c++11-extensions
 
 # b/22414716: thread_local (android/graphics/Paint.cpp) and Clang don't like each other at the
 #             moment.
-LOCAL_CLANG := false
+LOCAL_CLANG := true
 
 include $(BUILD_SHARED_LIBRARY)
 
