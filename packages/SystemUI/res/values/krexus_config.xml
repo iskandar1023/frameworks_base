@@ -21,4 +21,7 @@
 
     <!-- Double tap anywhere in lockscreen makes the device go to sleep -->
     <bool name="config_doubletap_lockscreen_sleep">true</bool>
+
+    <!-- Force headsup notification -->
+    <bool name="config_force_headsup">true</bool>
 </resources>
