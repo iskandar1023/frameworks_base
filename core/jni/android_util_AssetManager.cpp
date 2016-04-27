@@ -1026,7 +1026,7 @@ static void android_content_AssetManager_dumpTheme(JNIEnv* env, jobject clazz,
 
 class XmlAttributeFinder : public BackTrackingAttributeFinder<XmlAttributeFinder, jsize> {
 public:
-    XmlAttributeFinder(const ResXMLParser* parser)
+    explicit XmlAttributeFinder(const ResXMLParser* parser)
         : BackTrackingAttributeFinder(0, parser != NULL ? parser->getAttributeCount() : 0)
         , mParser(parser) {}
 
