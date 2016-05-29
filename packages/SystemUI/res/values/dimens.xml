@@ -594,4 +594,11 @@
 
     <!-- Network traffic monitor multi-line text size -->
     <dimen name="net_traffic_multi_text_size">8dp</dimen>
+
+    <!-- Screenshot Crop & Share -->
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="text_size_m">24sp</dimen>
+    <dimen name="text_size_s">17sp</dimen>
+    <dimen name="button_height">40dp</dimen>
+
 </resources>
