@@ -18,7 +18,6 @@ package com.android.systemui.statusbar;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Resources;
@@ -31,7 +30,6 @@ import android.os.Message;
 import android.os.RemoteException;
 import android.os.ServiceManager;
 import android.os.UserHandle;
-import android.provider.Settings;
 import android.text.TextUtils;
 import android.text.format.Formatter;
 import android.util.Log;
@@ -44,7 +42,6 @@ import com.android.systemui.R;
 import com.android.systemui.statusbar.phone.KeyguardIndicationTextView;
 import com.android.systemui.statusbar.phone.LockIcon;
 import com.android.systemui.statusbar.phone.StatusBarKeyguardViewManager;
-import com.android.systemui.ChargingCurrent;
 
 /**
  * Controls the indications and error messages shown on the Keyguard
@@ -77,8 +74,6 @@ public class KeyguardIndicationController {
     private int mChargingSpeed;
     private int mChargingCurrent;
     private String mMessageToShowOnScreenOn;
-    private String chargingCurrent = "";
-    private boolean mShowCurrent;
 
     public KeyguardIndicationController(Context context, KeyguardIndicationTextView textView,
                                         LockIcon lockIcon) {
@@ -220,29 +215,12 @@ public class KeyguardIndicationController {
                 break;
         }
 
-	mShowCurrent = Settings.System.getInt(mContext.getContentResolver(),
-                Settings.System.LOCKSCREEN_SHOW_CURRENT, 0) == 1;
-
-        if (ChargingCurrent.cat() != 0) {
-            chargingCurrent = "\n" + ChargingCurrent.cat() + " mAh";
-        }
-
         if (hasChargingTime) {
             String chargingTimeFormatted = Formatter.formatShortElapsedTimeRoundingUpToMinutes(
                     mContext, chargingTimeRemaining);
-            if (mShowCurrent) {
-                String chargingText = mContext.getResources().getString(chargingId, chargingTimeFormatted);
-                return chargingText + chargingCurrent;
-            } else {
-                return mContext.getResources().getString(chargingId, chargingTimeFormatted);
-            }
+            return mContext.getResources().getString(chargingId, chargingTimeFormatted);
         } else {
-	    if (mShowCurrent) {
-                String chargingText = mContext.getResources().getString(chargingId);
-                return chargingText + chargingCurrent;
-            } else {
-                return mContext.getResources().getString(chargingId);
-            }
+            return mContext.getResources().getString(chargingId);
         }
     }
 
