@@ -76,7 +76,20 @@
                     android:id="@+id/drawColor"
                     android:layout_width="10dp"
                     android:layout_height="10dp"
-                    android:background="@android:color/holo_red_light" />
+                    android:background="@android:color/holo_red_light"
+                    android:layout_gravity="center_vertical"/>
+
+                <Space
+                    android:layout_width="8dp"
+                    android:layout_height="wrap_content" />
+
+                <ImageButton
+                    android:id="@+id/penSize"
+                    android:layout_width="@dimen/crop_buttons"
+                    android:layout_height="@dimen/crop_buttons"
+                    android:background="@drawable/selector_light"
+                    android:scaleType="center"
+                    android:visibility="visible"/>
 
             </LinearLayout>
 
@@ -142,6 +155,5 @@
         android:layout_centerInParent="true"
         android:background="@android:color/white"
         android:visibility="gone" />
-
 
 </RelativeLayout>
