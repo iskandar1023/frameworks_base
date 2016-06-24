@@ -54,7 +54,6 @@ import android.view.animation.Interpolator;
 import android.view.animation.PathInterpolator;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-import android.provider.Settings;
 import android.view.animation.*;
 
 import com.android.internal.logging.MetricsLogger;
@@ -446,21 +445,6 @@ public class NotificationPanelView extends PanelView implements
         BlurTask.setBlurEngine(BlurUtils.BlurEngine.RenderScriptBlur);
 
         new BlurTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-     public static void updatePreferences(Context mContext) {
-
-        mBlurScale = Settings.System.getInt(mContext.getContentResolver(), Settings.System.BLUR_SCALE_PREFERENCE_KEY, 10);
-        mBlurRadius = Settings.System.getInt(mContext.getContentResolver(), Settings.System.BLUR_RADIUS_PREFERENCE_KEY, 5);
-        mBlurDarkColorFilter = Color.LTGRAY;
-        mBlurMixedColorFilter = Color.GRAY;
-        mBlurLightColorFilter = Color.DKGRAY;
-        mTranslucentQuickSettings = (Settings.System.getInt(mContext.getContentResolver(), Settings.System.TRANSLUCENT_QUICK_SETTINGS_PREFERENCE_KEY, 1) == 1);
-        mBlurredStatusBarExpandedEnabled = (Settings.System.getInt(mContext.getContentResolver(), Settings.System.STATUS_BAR_EXPANDED_ENABLED_PREFERENCE_KEY, 1) == 1);
-        mTranslucencyPercentage = Settings.System.getInt(mContext.getContentResolver(), Settings.System.TRANSLUCENT_QUICK_SETTINGS_PRECENTAGE_PREFERENCE_KEY, 60);
-        mTranslucencyPercentage = 255 - ((mTranslucencyPercentage * 255) / 100);
-
-        handleQuickSettingsBackround();
     }
 
     public static void recycle() {
@@ -2553,6 +2537,16 @@ public class NotificationPanelView extends PanelView implements
             resolver.registerContentObserver(Settings.Secure.getUriFor(
                     Settings.Secure.STATUS_BAR_LOCKED_ON_SECURE_KEYGUARD),
                     false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.BLUR_SCALE_PREFERENCE_KEY), false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.BLUR_RADIUS_PREFERENCE_KEY), false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.TRANSLUCENT_QUICK_SETTINGS_PREFERENCE_KEY), false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.STATUS_BAR_EXPANDED_ENABLED_PREFERENCE_KEY), false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.TRANSLUCENT_QUICK_SETTINGS_PRECENTAGE_PREFERENCE_KEY), false, this);
             update();
         }
 
@@ -2576,7 +2570,24 @@ public class NotificationPanelView extends PanelView implements
             mStatusBarLockedOnSecureKeyguard = Settings.Secure.getIntForUser(
                     resolver, Settings.Secure.STATUS_BAR_LOCKED_ON_SECURE_KEYGUARD, 1,
                     UserHandle.USER_CURRENT) == 1;
-	    }
+            mBlurScale = Settings.System.getInt(mContext.getContentResolver(),
+                    Settings.System.BLUR_SCALE_PREFERENCE_KEY, 10);
+            mBlurRadius = Settings.System.getInt(mContext.getContentResolver(),
+                    Settings.System.BLUR_RADIUS_PREFERENCE_KEY, 5);
+            mTranslucentQuickSettings =  Settings.System.getIntForUser(resolver,
+                    Settings.System.TRANSLUCENT_QUICK_SETTINGS_PREFERENCE_KEY, 0, UserHandle.USER_CURRENT) == 1;
+            mBlurredStatusBarExpandedEnabled = Settings.System.getIntForUser(resolver,
+                    Settings.System.STATUS_BAR_EXPANDED_ENABLED_PREFERENCE_KEY, 0, UserHandle.USER_CURRENT) == 1;
+            mTranslucencyPercentage = Settings.System.getInt(mContext.getContentResolver(),
+                    Settings.System.TRANSLUCENT_QUICK_SETTINGS_PRECENTAGE_PREFERENCE_KEY, 60);
+
+            mBlurDarkColorFilter = Color.LTGRAY;
+            mBlurMixedColorFilter = Color.GRAY;
+            mBlurLightColorFilter = Color.DKGRAY;
+            mTranslucencyPercentage = 255 - ((mTranslucencyPercentage * 255) / 100);
+            handleQuickSettingsBackround();
+            StatusBarHeaderView.handleStatusBarHeaderViewBackround();
+	}
     }
 
     @Override
