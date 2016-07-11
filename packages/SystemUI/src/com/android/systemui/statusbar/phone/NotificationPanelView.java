@@ -2597,7 +2597,6 @@ public class NotificationPanelView extends PanelView implements
             mBlurLightColorFilter = Color.DKGRAY;
             mTranslucencyPercentage = 255 - ((mTranslucencyPercentage * 255) / 100);
             handleQuickSettingsBackround();
-            StatusBarHeaderView.handleStatusBarHeaderViewBackround();
 	}
     }
 

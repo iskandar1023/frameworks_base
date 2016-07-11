@@ -233,7 +233,6 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
         if (mKeyguardShowing) {
             mStatusBarHeaderView.getBackground().setAlpha(255);
         } else {
-            mTranslucencyPercentage = 255 - ((mTranslucencyPercentage * 255) / 100);
             mStatusBarHeaderView.getBackground().setAlpha(mTranslucentHeader ? mTranslucencyPercentage : 255);
         }
     }
