@@ -138,7 +138,7 @@ class SaveImageInBackgroundTask extends AsyncTask<SaveImageInBackgroundData, Voi
         mScreenshotDir = new File(Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES), SCREENSHOTS_DIR_NAME);
         mImageFilePath = new File(mScreenshotDir, mImageFileName).getAbsolutePath();
-	mIsScreenshotCropShareEnabled = Settings.System.getInt(context.getContentResolver(), SCREENSHOT_CROP_AND_SHARE, 1) == 1;
+	mIsScreenshotCropShareEnabled = Settings.System.getInt(context.getContentResolver(), SCREENSHOT_CROP_AND_SHARE, 0) == 1;
 
         // Create the large notification icon
         mImageWidth = data.image.getWidth();
