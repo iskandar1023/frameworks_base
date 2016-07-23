@@ -6,7 +6,6 @@ import android.app.ActivityManager.RunningAppProcessInfo;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
-import android.content.res.Resources;
 import android.os.Process;
 import android.os.RemoteException;
 import android.os.UserHandle;
@@ -15,7 +14,6 @@ import android.provider.Settings;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.List;
-import java.util.Locale;
 
 public class DevUtils {
 
@@ -79,9 +77,4 @@ public class DevUtils {
         }
         return kernelStock;
    }
-
-    public static boolean isChineseLanguage() {
-       return Resources.getSystem().getConfiguration().locale.getLanguage().startsWith(
-               Locale.CHINESE.getLanguage());
-    }
 }

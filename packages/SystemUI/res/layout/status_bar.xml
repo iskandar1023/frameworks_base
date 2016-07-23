@@ -72,15 +72,6 @@
                     android:visibility="gone"
                     android:singleLine="true"
                     />
-                <com.android.systemui.krexus.carrierlabel.CarrierLabel
-                    android:id="@+id/statusbar_carrier_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:textAppearance="@style/TextAppearance.StatusBar.CarrierLabel"
-                    android:visibility="gone"
-                    android:singleLine="true"
-                    />
                 <com.android.systemui.statusbar.StatusBarIconView android:id="@+id/moreIcon"
                     android:layout_width="@dimen/status_bar_icon_size"
                     android:layout_height="match_parent"
