@@ -3413,6 +3413,12 @@ public final class Settings {
             }
         };
 
+        /**
+         * custom carrier label. The value is
+         * String.
+         */
+        public static final String CUSTOM_CARRIER_LABEL = "custom_carrier_label";
+
          /**
          * Navigation bar height when it is on protrait
          * @hide
@@ -3557,6 +3563,16 @@ public final class Settings {
         * USB Data automatic unlock
         */
        public static final String USB_DATA_AUTO_UNLOCK = "usb_data_auto_unlock";
+
+        /**
+         * Status bar carrier label
+         * 0: Hide
+         * 1: Display on keyguard status bar
+         * 2: Display on Normal status bar
+         * 3: Enabled for both
+         * @hide
+         */
+        public static final String STATUS_BAR_SHOW_CARRIER = "status_bar_show_carrier";
 
          /**
          *  Enable navigation bar double tap gesture on to put device to sleep
