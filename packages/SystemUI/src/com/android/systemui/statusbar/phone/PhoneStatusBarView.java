@@ -92,8 +92,8 @@ public class PhoneStatusBarView extends PanelBar {
     @Override
     public void onFinishInflate() {
         mCarrierLabel = (TextView) findViewById(R.id.statusbar_carrier_text);
-        updateVisibilities();
         mBarTransitions.init();
+        updateVisibilities();
     }
 
     private void updateVisibilities() {
