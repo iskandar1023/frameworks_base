@@ -3625,6 +3625,12 @@ public final class Settings {
         public static final String NETWORK_TRAFFIC_STATE = "network_traffic_state";
 
         /**
+         * Recents Blur 
+         * @hide
+         */
+        public static final String RECENT_APPS_ENABLED_PREFERENCE_KEY = "blurred_recent_app_enabled_pref";
+
+        /**
          * Whether or not to hide the network traffic indicator when there is no activity
          * @hide
          */
