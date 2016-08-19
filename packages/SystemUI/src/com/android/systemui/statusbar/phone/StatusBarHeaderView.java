@@ -37,6 +37,7 @@ import android.provider.AlarmClock;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Events;
 import android.os.Handler;
+import android.os.UserHandle;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.util.AttributeSet;
@@ -106,8 +107,6 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
 
     private int mMultiUserExpandedMargin;
     private int mMultiUserCollapsedMargin;
-
-    private SettingsObserver mSettingsObserver;
 
     private int mClockMarginBottomExpanded;
     private int mClockMarginBottomCollapsed;
@@ -959,6 +958,9 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
         }
 
         public void update() {
+            ContentResolver resolver = mContext.getContentResolver();
+            int currentUserId = ActivityManager.getCurrentUser();
+
             mTranslucentHeader = Settings.System.getIntForUser(resolver,
                 Settings.System.TRANSLUCENT_HEADER_PREFERENCE_KEY, 0, currentUserId) == 1;
             mTranslucencyPercentage = Settings.System.getInt(mContext.getContentResolver(),

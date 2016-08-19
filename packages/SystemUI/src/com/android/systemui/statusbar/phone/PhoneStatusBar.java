@@ -412,7 +412,6 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         }
     };
 
-    private int mBlurLockRadius;
     class SettingsObserver extends ContentObserver {
         SettingsObserver(Handler handler) {
             super(handler);
@@ -468,7 +467,6 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
                                         mContext.getContentResolver(),
                                         Settings.System.TRANSLUCENT_HEADER_PREFERENCE_KEY,
                                         0, UserHandle.USER_CURRENT) == 1;
-                    recreateStatusBar();
                     updateRowStates();
                     updateSpeedbump();
                     updateClearAll();
@@ -486,8 +484,6 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
             mAutomaticBrightness = mode != Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL;
             mBrightnessControl = Settings.System.getInt(
                     resolver, Settings.System.STATUS_BAR_BRIGHTNESS_CONTROL, 0) == 1;
-            mBlurLockRadius = Settings.System.getInt(mContext.getContentResolver(),
-                                   Settings.System.LOCKSCREEN_BLUR_RADIUS, 14);
        
             mBlurScale = Settings.System.getInt(mContext.getContentResolver(),
                     Settings.System.BLUR_SCALE_PREFERENCE_KEY, 10);
