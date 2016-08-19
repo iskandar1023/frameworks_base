@@ -823,8 +823,6 @@ class ApplicationThreadProxy implements IApplicationThread {
         data.writeStrongBinder(voiceInteractor != null ? voiceInteractor.asBinder() : null);
         data.writeInt(procState);
         data.writeBundle(state);
-        List<String[]> assetPaths = data.readArrayList(null);
-        data.writeList(assetPaths);
         data.writePersistableBundle(persistentState);
         data.writeTypedList(pendingResults);
         data.writeTypedList(pendingNewIntents);
