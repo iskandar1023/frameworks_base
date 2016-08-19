@@ -301,6 +301,7 @@ public abstract class ApplicationThreadNative extends Binder
             HashMap<String, IBinder> services = data.readHashMap(null);
             Bundle coreSettings = data.readBundle();
             ArrayList<String[]> assetPaths = data.readArrayList(null);
+            Log.e("BIND_APPLICATION_TRANSACTION", "bindApplication is called");
             bindApplication(packageName, info, providers, testName, profilerInfo, testArgs,
                     testWatcher, uiAutomationConnection, testMode, openGlTrace,
                     restrictedBackupMode, persistent, config, compatInfo, services,
@@ -1007,6 +1008,7 @@ class ApplicationThreadProxy implements IApplicationThread {
             boolean openGlTrace, boolean restrictedBackupMode, boolean persistent,
             Configuration config, CompatibilityInfo compatInfo, Map<String, IBinder> services,
             Bundle coreSettings, List<String[]> assetPaths) throws RemoteException {
+        Log.e("BIND_APPLICATION_TRANSACTION", "bindApplication is in!");
         Parcel data = Parcel.obtain();
         data.writeInterfaceToken(IApplicationThread.descriptor);
         data.writeString(packageName);
@@ -1036,9 +1038,11 @@ class ApplicationThreadProxy implements IApplicationThread {
         data.writeMap(services);
         data.writeBundle(coreSettings);
         data.writeList(assetPaths);
+        Log.e("BIND_APPLICATION_TRANSACTION", "bindApplication is transacting something!");
         mRemote.transact(BIND_APPLICATION_TRANSACTION, data, null,
                 IBinder.FLAG_ONEWAY);
         data.recycle();
+        Log.e("BIND_APPLICATION_TRANSACTION", "bindApplication is out!");
     }
     
     public final void scheduleExit() throws RemoteException {
