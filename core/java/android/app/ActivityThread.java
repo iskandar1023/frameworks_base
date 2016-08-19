@@ -854,6 +854,7 @@ public final class ActivityThread {
         }
 
         public void scheduleAssetsChanged(String[] assetPaths) {
+            Log.e("Projekt", "scheduleAssetsChanged has started!");
             if (assetPaths == null || assetPaths.length == 0) {
                 Slog.w(TAG, "Cannot update assets: array is " +
                         assetPaths == null ? "null" : "empty");
@@ -876,6 +877,7 @@ public final class ActivityThread {
             // remove any pending updates to the same asset path before posting this update
             mH.removeMessages(H.ASSETS_CHANGED, key);
             mH.sendMessage(m);
+            Log.e("Projekt", "scheduleAssetsChanged has finished!");
         }
 
         public void updateTimeZone() {
