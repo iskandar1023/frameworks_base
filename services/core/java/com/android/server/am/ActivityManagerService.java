@@ -17560,11 +17560,16 @@ public final class ActivityManagerService extends ActivityManagerNative
                 if ("android".equals(packageName)) {
                     continue;
                 }
+                Slog.e("updateAssetsLocked", updateAssetsLocked);
                 if (systemOverlayPaths != null) {
+                    Slog.e("Projekt", "scheduleAssetsChanged has run systemOverlayPaths");
                     app.thread.scheduleAssetsChanged(systemOverlayPaths);
+                    Slog.e("systemOverlayPaths", systemOverlayPaths.toString());
                 }
                 if (overlays.keySet().contains(packageName)) {
+                    Slog.e("Projekt", "scheduleAssetsChanged has run overlays.get(packageName)");
                     app.thread.scheduleAssetsChanged(overlays.get(packageName));
+                    Slog.e("overlays.get", overlays.get(packageName).toString());
                 }
             } catch (Exception e) {}
         }
