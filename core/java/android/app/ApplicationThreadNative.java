@@ -275,6 +275,7 @@ public abstract class ApplicationThreadNative extends Binder
 
         case BIND_APPLICATION_TRANSACTION:
         {
+            Log.e("BIND_APPLICATION_TRANSACTION", "BIND_APPLICATION_TRANSACTION is now running");
             data.enforceInterface(IApplicationThread.descriptor);
             String packageName = data.readString();
             ApplicationInfo info =
@@ -304,6 +305,7 @@ public abstract class ApplicationThreadNative extends Binder
                     testWatcher, uiAutomationConnection, testMode, openGlTrace,
                     restrictedBackupMode, persistent, config, compatInfo, services,
                     coreSettings, assetPaths);
+            Log.e("BIND_APPLICATION_TRANSACTION", "BIND_APPLICATION_TRANSACTION is done!");
             return true;
         }
 

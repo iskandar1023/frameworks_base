@@ -4548,6 +4548,7 @@ public final class ActivityThread {
 
         // Prepare the asset manager for any overlay packages to load
         for (String[] paths : data.assetPaths) {
+            Log.e("ProjektPrepare", paths.toString());
             mResourcesManager.applyAssetsChangedLocked(paths);
         }
 
