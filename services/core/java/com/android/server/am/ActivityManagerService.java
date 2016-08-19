@@ -17533,7 +17533,6 @@ public final class ActivityManagerService extends ActivityManagerNative
      */
     public void updateAssets(int userId, Map<String,String[]> overlays) {
         enforceCallingPermission(android.Manifest.permission.CHANGE_CONFIGURATION, "updateAssets()");
-        Slog.e("Projekt", "updateAssets has been run!");
 
         synchronized(this) {
             final long origId = Binder.clearCallingIdentity();
@@ -17543,11 +17542,9 @@ public final class ActivityManagerService extends ActivityManagerNative
                 Binder.restoreCallingIdentity(origId);
             }
         }
-        Slog.e("Projekt", "updateAssets has completed it's function!");
     }
 
     void updateAssetsLocked(int userId, Map<String, String[]> overlays) {
-        Slog.e("Projekt", "updateAssetsLocked has been run!");
         String[] systemOverlayPaths = null;
         if (overlays.keySet().contains("android")) {
             systemOverlayPaths = overlays.get("android");
@@ -17575,7 +17572,6 @@ public final class ActivityManagerService extends ActivityManagerNative
         Configuration config = new Configuration(mConfiguration);
         config.assetSeq++;
         updateConfiguration(config);
-        Slog.e("Projekt", "updateAssets has completed it's function and configChanged!");
     }
 
     /**
