@@ -1733,11 +1733,11 @@ public final class ActivityThread {
     /**
      * Creates the top level resources for the given package.
      */
-    Resources getTopLevelResources(String resDir, String[] splitResDirs, String[] libDirs,
-            int displayId, Configuration overrideConfiguration,
+    Resources getTopLevelResources(String resDir, String[] splitResDirs, String[] overlayDirs,
+            String[] libDirs, int displayId, Configuration overrideConfiguration,
             LoadedApk pkgInfo) {
-        return mResourcesManager.getTopLevelResources(resDir, splitResDirs, libDirs, displayId,
-                overrideConfiguration, pkgInfo.getCompatibilityInfo());
+        return mResourcesManager.getTopLevelResources(resDir, splitResDirs, overlayDirs, libDirs,
+                displayId, overrideConfiguration, pkgInfo.getCompatibilityInfo());
     }
 
     final Handler getHandler() {
