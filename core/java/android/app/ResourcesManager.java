@@ -41,7 +41,7 @@ import java.util.Map;
 /** @hide */
 public class ResourcesManager {
     static final String TAG = "ResourcesManager";
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
 
     private static ResourcesManager sResourcesManager;
     private final ArrayMap<ResourcesKey, WeakReference<Resources> > mActiveResources =
@@ -153,15 +153,13 @@ public class ResourcesManager {
      *
      * @param resDir the resource directory.
      * @param splitResDirs split resource directories.
-     * @param overlayDirs the resource overlay directories.
      * @param libDirs the shared library resource dirs this app references.
      * @param displayId display Id.
      * @param overrideConfiguration override configurations.
      * @param compatInfo the compatibility info. Must not be null.
      */
-    Resources getTopLevelResources(String resDir, String[] splitResDirs, String[] overlayDirs,
-    		String[] libDirs, int displayId, Configuration overrideConfiguration, 
-    		CompatibilityInfo compatInfo) {
+    Resources getTopLevelResources(String resDir, String[] splitResDirs, String[] libDirs,
+            int displayId, Configuration overrideConfiguration, CompatibilityInfo compatInfo) {
         final float scale = compatInfo.applicationScale;
         Configuration overrideConfigCopy = (overrideConfiguration != null)
                 ? new Configuration(overrideConfiguration) : null;
@@ -202,12 +200,6 @@ public class ResourcesManager {
                 if (assets.addAssetPath(splitResDir) == 0) {
                     return null;
                 }
-            }
-        }
-
-        if (overlayDirs != null) {
-            for (String idmapPath : overlayDirs) {
-                assets.addOverlayPath(idmapPath);
             }
         }
 
