@@ -226,6 +226,7 @@ import com.android.server.policy.PhoneWindowManager;
 import com.android.server.ServiceThread;
 import com.android.server.SystemConfig;
 import com.android.server.Watchdog;
+import com.android.server.om.OverlayManagerService;
 import com.android.server.pm.PermissionsState.PermissionState;
 import com.android.server.pm.Settings.DatabaseVersion;
 import com.android.server.pm.Settings.VersionInfo;
@@ -7501,8 +7502,22 @@ public class PackageManagerService extends IPackageManager.Stub {
             }
 
             pkgSetting.setTimeStamp(scanFileTime);
+            
+            // Load up all the assetPaths from OverlayManagerService using getAllEnabledOverlays for
+            // this specific package to bind to.
+            OverlayManagerService overlayManagerService = new OverlayManagerService(mContext, mInstaller);
+            final int[] currentUserIds = UserManagerService.getInstance().getUserIds();
+            int length_of_users = currentUserIds.length;
+            int index = 0;
+            while (index < length_of_users) {
+                String[] assetPaths = new String[overlayManagerService
+                    .getAllEnabledOverlays(pkg.packageName, currentUserIds[index])];
+                if (assetPaths != null && assetPaths.length != 0) {
+                    pkg.applicationInfo.resourceDirs = assetPaths;
+                }
+                index += 1;
+            }
         }
-
         return pkg;
     }
 
