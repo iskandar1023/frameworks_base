@@ -263,6 +263,30 @@ public class OverlayManagerService extends SystemService {
         }
         updateAssets(newUserId, targets.toArray(new String[targets.size()]));
     }
+    
+    public List<String[]> getAllEnabledAssetPaths(String packageName, int userId)
+        throws PackageManager.NameNotFoundException {
+
+        synchronized (mLock) {
+            List<String[]> out = new ArrayList<>(2);
+            for (String pkg : new String[]{"android", packageName}) {
+                String[] paths = mImpl.onGetAssetPaths(pkg, userId);
+                List<String> enabled = new ArrayList<>();
+                for (int i = 0; i < paths.length; i++) {
+                    if (mDatabase.getEnabled(paths[i], userId)) {
+                        // This ensures all assetPaths are enabled through OMS
+                        enabled.add(paths[i])
+                    }
+                }
+                String[] filtered = enabled.toArray(new String[0]);
+                if (filtered == null) {
+                    throw new PackageManager.NameNotFoundException(pkg);
+                }
+                out.add(filtered);
+            }
+            return out;
+        }
+    }
 
     public List<String[]> getAllAssetPaths(String packageName, int userId)
         throws PackageManager.NameNotFoundException {
