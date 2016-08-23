@@ -916,6 +916,8 @@ public class PackageManagerService extends IPackageManager.Stub {
 
     static UserManagerService sUserManager;
 
+    static OverlayManagerService overlayManagerService;
+
     // Stores a list of users whose package restrictions file needs to be updated
     private ArraySet<Integer> mDirtyUsers = new ArraySet<Integer>();
 
@@ -1895,6 +1897,8 @@ public class PackageManagerService extends IPackageManager.Stub {
 
             sUserManager = new UserManagerService(context, this,
                     mInstallLock, mPackages);
+
+            overlayManagerService = new OverlayManagerService(context, mInstaller);
 
             // Propagate permission configuration in to package manager.
             ArrayMap<String, SystemConfig.PermissionEntry> permConfig
@@ -7505,17 +7509,17 @@ public class PackageManagerService extends IPackageManager.Stub {
             
             // Load up all the assetPaths from OverlayManagerService using getAllEnabledOverlays for
             // this specific package to bind to.
-            OverlayManagerService overlayManagerService = new OverlayManagerService(mContext, mInstaller);
-            final int[] currentUserIds = UserManagerService.getInstance().getUserIds();
-            int length_of_users = currentUserIds.length;
-            int index = 0;
-            while (index < length_of_users) {
-                String[] assetPaths = new String[overlayManagerService
-                    .getAllEnabledOverlays(pkg.packageName, currentUserIds[index])];
-                if (assetPaths != null && assetPaths.length != 0) {
-                    pkg.applicationInfo.resourceDirs = assetPaths;
+            String packagename = "";
+            for (int userId : UserManagerService.getInstance().getUserIds()) {
+                try {
+                    packagename = pkg.applicationInfo.packageName;
+                    String[] assetPaths = overlayManagerService.getAllAssetPaths(packagename, userId).get(1);
+                    if (assetPaths != null && assetPaths.length != 0) {
+                        pkg.applicationInfo.resourceDirs = assetPaths;
+                        break;
+                    }
+                } catch (PackageManager.NameNotFoundException e) {
                 }
-                index += 1;
             }
         }
         return pkg;
