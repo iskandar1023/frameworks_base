@@ -276,6 +276,9 @@ public class OverlayManagerService extends SystemService {
                 }
                 out.add(paths);
             }
+            for (int i = 0; i < out.get(1).size(); i++) {
+                Slog.e("ProjektTestSyko", out.get(1)[i].toString());
+            }
             return out;
         }
     }
