@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <webviewproviders>
+    <!-- The default WebView implementation -->
+    <webviewprovider description="Android WebView" packageName="com.android.webview" availableByDefault="true">
+    </webviewprovider>
+    <!-- Google WebView implementation -->
     <webviewprovider availableByDefault="true" description="Chrome Stable" packageName="com.android.chrome" />
     <webviewprovider availableByDefault="true" description="Google WebView" isFallback="true" packageName="com.google.android.webview" />
     <webviewprovider description="Chrome Beta" packageName="com.chrome.beta">
